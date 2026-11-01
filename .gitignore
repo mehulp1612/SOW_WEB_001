@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+# Local reference documents, not public repository deliverables
+WEB-001_SOW.docx
+WEB-001_REQUIREMENTS.txt
+WEB-001_SETUP_AND_BOLT_PROMPTS.md
