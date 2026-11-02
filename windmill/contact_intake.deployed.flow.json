@@ -1,0 +1,85 @@
+{
+    "summary": "contact_intake",
+    "description": "WEB-001: authenticated synchronous intake; confirms durable, duplicate-safe storage.",
+    "value": {
+        "modules": [
+            {
+                "id": "store",
+                "value": {
+                    "lock": "{\n  \"dependencies\": {}\n}\n//bun.lock\n<empty>",
+                    "type": "rawscript",
+                    "content": "// Paste into the sole TypeScript/Bun inline step of contact_intake.\n// Bind db to a protected Windmill resource, never a caller-controlled Flow input.\ntype ContactSupabase = { url: string; secret_key: string };\n\nexport async function main(\n  db: ContactSupabase,\n  request_id: string,\n  name: string,\n  email: string,\n  message: string,\n  website: string,\n): Promise<{ stored: true; request_id: string }> {\n  if (typeof request_id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(request_id) ||\n      typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 80 ||\n      typeof email !== 'string' || email.trim().length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.trim()) ||\n      typeof message !== 'string' || message.trim().length < 10 || message.trim().length > 1000 || website !== '') {\n    throw new Error('Invalid intake payload.');\n  }\n  const url = new URL(db.url);\n  if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || url.pathname !== '/' || !db.secret_key) throw new Error('Invalid storage resource.');\n  const headers: Record<string, string> = { 'Content-Type': 'application/json', apikey: db.secret_key };\n  // Legacy service_role JWTs also require Authorization. Modern sb_secret_ keys\n  // belong only in apikey; they are not JWT bearer tokens.\n  if (!db.secret_key.startsWith('sb_secret_')) headers.Authorization = `Bearer ${db.secret_key}`;\n  const id = request_id.toLowerCase();\n  try {\n    const response = await fetch(new URL('/rest/v1/rpc/store_contact_submission', url), {\n      method: 'POST', headers, redirect: 'error', signal: AbortSignal.timeout(10000),\n      body: JSON.stringify({ p_request_id: id, p_name: name.trim(), p_email: email.trim(), p_message: message.trim() }),\n    });\n    if (!response.ok) throw new Error('Storage failed.');\n    const result: unknown = await response.json();\n    if (!result || typeof result !== 'object' || !('stored' in result) || result.stored !== true || !('request_id' in result) || result.request_id !== id) throw new Error('Storage failed.');\n    return { stored: true, request_id: id };\n  } catch {\n    throw new Error('Storage could not be confirmed. Retry with the same request ID.');\n  }\n}\n",
+                    "language": "bun",
+                    "input_transforms": {
+                        "db": {
+                            "expr": "resource(\"f/web001/supabase\")",
+                            "type": "javascript"
+                        },
+                        "name": {
+                            "expr": "flow_input.name",
+                            "type": "javascript"
+                        },
+                        "email": {
+                            "expr": "flow_input.email",
+                            "type": "javascript"
+                        },
+                        "message": {
+                            "expr": "flow_input.message",
+                            "type": "javascript"
+                        },
+                        "website": {
+                            "expr": "flow_input.website",
+                            "type": "javascript"
+                        },
+                        "request_id": {
+                            "expr": "flow_input.request_id",
+                            "type": "javascript"
+                        }
+                    }
+                },
+                "summary": "Store inquiry and confirm request ID"
+            }
+        ]
+    },
+    "schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "request_id",
+            "name",
+            "email",
+            "message",
+            "website"
+        ],
+        "properties": {
+            "request_id": {
+                "type": "string",
+                "default": "",
+                "description": ""
+            },
+            "name": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string"
+            },
+            "message": {
+                "type": "string"
+            },
+            "website": {
+                "type": "string",
+                "default": "",
+                "enum": [
+                    ""
+                ]
+            }
+        },
+        "order": [
+            "request_id",
+            "name",
+            "email",
+            "message",
+            "website"
+        ]
+    }
+}

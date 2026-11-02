@@ -12,3 +12,24 @@ WEB-001_SOW.docx
 WEB-001_REQUIREMENTS.txt
 WEB-001_SETUP_AND_BOLT_PROMPTS.md
 prompt.txt
+# Local submission correspondence
+/docs/SUBMISSION.md
+
+# Recordings are shared separately
+*.mp4
+*.mov
+*.webm
+*.mkv
+/WEB-001_Submission_Package.zip
+
+# Local caches, editor settings and OS metadata
+.vite/
+*.tsbuildinfo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+*.bak
+~$*

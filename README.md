@@ -1,12 +1,48 @@
 # Sample Home Services — Demo
 
-Version A frontend for WEB-001: React, TypeScript, Vite, Tailwind CSS, and a locally maintained shadcn/ui Button. No services are offered.
+WEB-001 submission: React, TypeScript, Vite, Tailwind CSS, and a locally maintained shadcn/ui Button. Version B includes the Weekend Appointments callout and Request a Callback button. No services are offered.
+
+- [Live website](https://mehulp1612.github.io/SOW_WEB_001/)
+- [Version A end-to-end flow-test recording](https://drive.google.com/file/d/1-qXnZdY_rOOEfAjc8dGrMGPgH3DtP29b/view?usp=sharing)
+- [Version B development and deployment recording](https://drive.google.com/file/d/1xe9YGFqKa_iSpe3Ye401an2OPlmoLLWn/view?usp=sharing) (5 minutes 26 seconds)
+- [Version A Actions](https://github.com/mehulp1612/SOW_WEB_001/actions/runs/41400968715) / [Version B Actions](https://github.com/mehulp1612/SOW_WEB_001/actions/runs/41418918989)
+
+This public repository is the submission and handover location; no ZIP attachment is required. Scheduled handover is **2 November 2026 at 16:00 IST**, with pilot availability through at least **5 November 2026 at 16:00 IST**. Reported effort: approximately **5 hours 40 minutes**. Reported project expenditure: **zero**.
+
+## Documentation guide
+
+| Document | What it contains |
+| --- | --- |
+| [Reviewer guide](docs/SUBMISSION_README.md) | Suggested review order, artifact index, access prerequisites and outstanding evidence |
+| [Delivery record](docs/DELIVERY.md) | Exact A/B commit SHAs, Actions links, inquiry IDs, recording details, ownership, costs and availability |
+| [Architecture](docs/ARCHITECTURE.md) | Browser-to-Edge-to-Windmill-to-database flow, component responsibilities, trust boundaries and retry behavior |
+| [Backend setup and recovery](docs/BACKEND_SETUP.md) | Supabase schema and RLS, Windmill resource/Flow setup, Edge deployment, environment configuration, recreation, recovery and credential rotation |
+| [Operator quick start](docs/OPERATOR_QUICKSTART.md) | Eight steps for a newly authorized operator to submit and verify an inquiry within 30 minutes |
+| [Acceptance test log](docs/TEST_LOG.md) | T1-T8 results, developer-reported outcomes, evidence gaps and unconfirmed checks |
+| [Validation record](VALIDATION.md) | Local tests/build, SQL checks, public deployment verification and deployed Flow comparison |
+| [Development provenance](docs/DEVELOPMENT_PROVENANCE.md) | Partial bolt.diy starting point, switch to VS Code/Codex, prescribed change instruction and declared deviations |
+| [Recording details](docs/RECORDING_PLAN.md) | Actual recording metadata, sharing and review checks, and duration/workflow deviations |
+
+## Implementation artifacts
+
+| Location | Contents |
+| --- | --- |
+| [src/](src/) | React page, contact form, validation, styles and frontend tests |
+| [.github/workflows/deploy.yml](.github/workflows/deploy.yml) | Locked install, tests, build and GitHub Pages deployment |
+| [vite.config.ts](vite.config.ts), [package-lock.json](package-lock.json) | Vite base-path/test configuration and pinned dependency resolution |
+| [supabase/migrations/](supabase/migrations/), [supabase/tests/](supabase/tests/) | Contact table, RLS/privileges, duplicate-safe RPC and SQL verification |
+| [supabase/functions/contact-submit/](supabase/functions/contact-submit/), [supabase/config.toml](supabase/config.toml) | Public validated Edge endpoint and function configuration |
+| [windmill/contact_intake.ts](windmill/contact_intake.ts), [generated Flow](windmill/contact_intake.flow.json) | Maintained storage worker and portable generated definition |
+| [Deployed Flow export](windmill/contact_intake.deployed.flow.json) | Developer-supplied snapshot of the deployed Windmill Flow |
+| [.env.example](.env.example) | Public frontend endpoint template; no privileged credentials |
 
 ## Current milestone
 
-The supplied partial bolt.diy export was completed locally with Codex assistance. Version A is deployed; the developer has verified a browser submission and same-ID deduplication in Supabase. The SOW is not yet complete. See [the delivery record](docs/DELIVERY.md) for release identifiers and outstanding evidence.
+Both version A and version B have successful GitHub Actions deployments. The developer reports verified browser storage, same-ID deduplication and independent outage/recovery testing. Full acceptance evidence and the separate new-operator exercise remain incomplete; see [the test log](docs/TEST_LOG.md).
 
-Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Backend source includes a Supabase migration/RLS checks, a public Edge Function, and a portable Windmill Flow definition. Version B, remaining live failure/security checks, deployed export and independent operator verification remain outstanding.
+**Declared tool change:** the initial partial bolt.diy export was completed and modified locally using **VS Code and Codex**, following repeated reported AI-provider connection failures. This departs from the mandatory bolt.diy generation workflow; no exception approval was obtained. The recording also exceeds the prescribed 2-3 minutes. Full SOW compliance is not claimed.
+
+Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Backend source includes a Supabase migration/RLS checks, a public Edge Function, and a portable Windmill Flow definition. Remaining live failure/security checks, independent operator verification remain outstanding. The developer-supplied deployed Flow export is included; see VALIDATION.md for its comparison with the local source.
 
 ## Connect the backend
 
@@ -53,9 +89,9 @@ Set backend CORS to `https://<owner>.github.io`, without the repository path. Ke
 ## Remaining work
 
 - Capture matching browser, Windmill and database evidence for the confirmed inquiry.
-- Complete live invalid-input, anonymous-access and outage/recovery checks; audit for privileged secret exposure.
-- Genuine version B change and second automated deployment to the same URL.
-- Complete [T1–T8 evidence](docs/TEST_LOG.md), recording, deployed export, costs and 72-hour availability dates. Validate the [operator guide](docs/OPERATOR_QUICKSTART.md) with a new authorized operator.
+- Complete live invalid-input and anonymous-access checks; attach evidence of reported outage/recovery testing and audit for privileged secret exposure.
+- Attach live version B form evidence. Version B Actions succeeded; VS Code/Codex was used instead of bolt.diy, as declared in the delivery record.
+- Complete [T1–T8 evidence](docs/TEST_LOG.md) and recording review. Validate the [operator guide](docs/OPERATOR_QUICKSTART.md) with a new authorized operator. Costs and the 72-hour availability dates are recorded in the delivery document.
 
 Automated tests simulate HTTP responses; they are not proof of live-provider behavior. SQL tests were also run on an isolated local PostgreSQL instance. See VALIDATION.md for current verification status.
 
