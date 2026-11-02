@@ -44,3 +44,7 @@ The developer supplied `windmill/contact_intake.deployed.flow.json`. JSON parses
 The developer confirmed that the supplied Google Drive video opens publicly in an incognito window.
 
 Developer update: outage/recovery testing was reported as performed independently; detailed test evidence is still pending. The separate new-operator onboarding exercise is not confirmed. Reported work time is approximately 5 hours 40 minutes with zero project expenditure. Corrected scheduled handover is 2 November 2026 at 16:00 IST, with minimum availability through 5 November 2026 at 16:00 IST.
+
+## Supplied mobile and validation screenshots
+
+The developer confirmed T1 mobile testing and T4 invalid-input rejection on 2 November and supplied screenshots saved under `docs/evidence/`. Chrome DevTools emulates iPhone 16 at 393 x 852; the hero/demo notice and version A Contact Us form are visible. A desktop screenshot shows errors for malformed email and a message below the minimum length. T1 and T4 are marked completed on the developer report, with screenshot links and evidence limits in TEST_LOG.md. These images do not independently prove all invalid-input cases, database row absence or physical-device behavior.
