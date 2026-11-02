@@ -1,0 +1,6 @@
+project_id = "sow-web-001"
+
+[functions.contact-submit]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/contact-submit/index.ts"

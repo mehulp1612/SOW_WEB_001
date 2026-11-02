@@ -1,0 +1,75 @@
+{
+  "summary": "contact_intake",
+  "description": "WEB-001: authenticated synchronous intake; confirms durable, duplicate-safe storage.",
+  "value": {
+    "modules": [
+      {
+        "id": "store",
+        "summary": "Store inquiry and confirm request ID",
+        "value": {
+          "type": "rawscript",
+          "language": "bun",
+          "content": "// Paste into the sole TypeScript/Bun inline step of contact_intake.\n// Bind db to a protected Windmill resource, never a caller-controlled Flow input.\ntype ContactSupabase = { url: string; secret_key: string };\n\nexport async function main(\n  db: ContactSupabase,\n  request_id: string,\n  name: string,\n  email: string,\n  message: string,\n  website: string,\n): Promise<{ stored: true; request_id: string }> {\n  if (typeof request_id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(request_id) ||\n      typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 80 ||\n      typeof email !== 'string' || email.trim().length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.trim()) ||\n      typeof message !== 'string' || message.trim().length < 10 || message.trim().length > 1000 || website !== '') {\n    throw new Error('Invalid intake payload.');\n  }\n  if (!db || typeof db !== 'object' || typeof db.url !== 'string' || !db.url.trim()) {\n    throw new Error('Storage resource URL is missing. Set url in f/web001/supabase and bind the store step db input to that resource.');\n  }\n  let url: URL;\n  try { url = new URL(db.url.trim()); }\n  catch { throw new Error('Storage resource url must be the Supabase project HTTPS URL.'); }\n  if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('Storage resource url must be the Supabase project HTTPS URL without an API path.');\n  if (typeof db.secret_key !== 'string' || !db.secret_key.trim() || db.secret_key.startsWith('$var:')) {\n    throw new Error('Storage secret is missing or unresolved. Check the resource secret_key variable reference and runner permissions.');\n  }\n  const headers: Record<string, string> = { 'Content-Type': 'application/json', apikey: db.secret_key };\n  // Legacy service_role JWTs also require Authorization. Modern sb_secret_ keys\n  // belong only in apikey; they are not JWT bearer tokens.\n  if (!db.secret_key.startsWith('sb_secret_')) headers.Authorization = `Bearer ${db.secret_key}`;\n  const id = request_id.toLowerCase();\n  try {\n    const response = await fetch(new URL('/rest/v1/rpc/store_contact_submission', url), {\n      method: 'POST', headers, redirect: 'error', signal: AbortSignal.timeout(10000),\n      body: JSON.stringify({ p_request_id: id, p_name: name.trim(), p_email: email.trim(), p_message: message.trim() }),\n    });\n    if (!response.ok) throw new Error('Storage failed.');\n    const result: unknown = await response.json();\n    if (!result || typeof result !== 'object' || !('stored' in result) || result.stored !== true || !('request_id' in result) || result.request_id !== id) throw new Error('Storage failed.');\n    return { stored: true, request_id: id };\n  } catch {\n    throw new Error('Storage could not be confirmed. Retry with the same request ID.');\n  }\n}\n",
+          "input_transforms": {
+            "db": {
+              "type": "javascript",
+              "expr": "resource(\"f/web001/supabase\")"
+            },
+            "request_id": {
+              "type": "javascript",
+              "expr": "flow_input.request_id"
+            },
+            "name": {
+              "type": "javascript",
+              "expr": "flow_input.name"
+            },
+            "email": {
+              "type": "javascript",
+              "expr": "flow_input.email"
+            },
+            "message": {
+              "type": "javascript",
+              "expr": "flow_input.message"
+            },
+            "website": {
+              "type": "javascript",
+              "expr": "flow_input.website"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "request_id",
+      "name",
+      "email",
+      "message",
+      "website"
+    ],
+    "properties": {
+      "request_id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "website": {
+        "type": "string",
+        "default": "",
+        "enum": [
+          ""
+        ]
+      }
+    }
+  }
+}

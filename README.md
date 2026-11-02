@@ -6,11 +6,17 @@ Version A frontend for WEB-001: React, TypeScript, Vite, Tailwind CSS, and a loc
 
 The supplied partial bolt.diy export was completed locally with Codex assistance. This is a frontend milestone, not a completed SOW or live release A. No generated conversation or deployment evidence is claimed.
 
-Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Supabase SQL/RLS, the Edge Function, Windmill Flow, live storage, deployment records, and independent operator verification remain outstanding.
+Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Backend source now includes a Supabase migration/RLS checks, a public Edge Function, and a portable Windmill Flow definition. Cloud configuration, live storage verification, deployment evidence, and independent operator verification remain outstanding.
+
+## Connect the backend
+
+Follow [the Supabase and Windmill setup guide](docs/BACKEND_SETUP.md). It lists each dashboard step and the exact credential locations. Share only project/workspace URLs when requesting help; enter keys directly into their protected settings.
+
+Apply `supabase/migrations/202611020001_contact_intake.sql` once, verify with `supabase/tests/intake.sql`, configure the Windmill resource and import the Flow, then deploy `contact-submit`. Finally set the public endpoint as the GitHub Actions variable and rebuild the frontend. The Flow JSON is generated from `windmill/contact_intake.ts`; run `npm run windmill:export` after changing that script. Capture a real sanitized deployed Flow export after cloud verification.
 
 ## Local development
 
-Use Node 22.16.0 (see .nvmrc). On the first setup, run `npm install` to create package-lock.json if it has not yet been generated. Commit that lockfile before pushing; subsequent installs and CI use `npm ci`.
+Use Node 22.16.0 (see .nvmrc). The package lockfile is committed; local installs and CI use `npm ci`.
 
 ```sh
 npm ci
@@ -46,12 +52,12 @@ Set backend CORS to `https://<owner>.github.io`, without the repository path. Ke
 
 ## Remaining work
 
-- Supabase migration/RLS, Edge Function, authenticated synchronous Windmill Flow.
+- Apply the Supabase migration/RLS, deploy the Edge Function, and configure/deploy the authenticated synchronous Windmill Flow from the included source.
 - Real browser storage verification, invalid-input and anonymous-access tests, outage/recovery and duplicate checks.
 - Genuine version B change and second automated deployment to the same URL.
 - Dated T1–T8 evidence, recording, operator guide, portable exports, costs, rotation/recovery instructions, and 72-hour availability.
 
-Automated tests simulate HTTP responses; they are not proof of live-provider behavior. Initial dependency installation was blocked by the development session's network restrictions. See VALIDATION.md for current verification status.
+Automated tests simulate HTTP responses; they are not proof of live-provider behavior. SQL tests were also run on an isolated local PostgreSQL instance. See VALIDATION.md for current verification status.
 
 ## Attribution
 
