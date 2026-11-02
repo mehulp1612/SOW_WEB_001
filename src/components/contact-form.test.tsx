@@ -7,7 +7,7 @@ afterEach(() => vi.unstubAllGlobals());
 it('rejects blank fields without a request', async () => {
   const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
   render(<ContactForm endpoint={endpoint} />);
-  await userEvent.click(screen.getByRole('button', { name: 'Contact Us' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Request a Callback' }));
   expect(screen.getByText('Enter a name between 2 and 80 characters.')).toBeInTheDocument();
   expect(screen.getByLabelText(/Name/)).toHaveFocus();
   expect(fetcher).not.toHaveBeenCalled();
@@ -22,14 +22,14 @@ it('retries the original payload and ID, then assigns a fresh ID to a new inquir
     await user.type(screen.getByLabelText(/Email/), 'demo@example.com');
     await user.type(screen.getByLabelText(/Message/), 'Please test my sample inquiry.');
   }
-  await fill(); await user.click(screen.getByRole('button', { name: 'Contact Us' }));
+  await fill(); await user.click(screen.getByRole('button', { name: 'Request a Callback' }));
   expect(await screen.findByRole('alert')).toHaveTextContent('could not confirm');
   expect(screen.getByLabelText(/Name/)).toHaveAttribute('readonly');
   await user.click(screen.getByRole('button', { name: 'Retry inquiry' }));
   expect(await screen.findByRole('status')).toHaveTextContent('Your inquiry is received');
   expect(fetcher.mock.calls[0][1].body).toBe(fetcher.mock.calls[1][1].body);
   await user.click(screen.getByRole('button', { name: 'Send another inquiry' }));
-  await fill(); await user.click(screen.getByRole('button', { name: 'Contact Us' })); await screen.findByRole('status');
+  await fill(); await user.click(screen.getByRole('button', { name: 'Request a Callback' })); await screen.findByRole('status');
   expect(JSON.parse(fetcher.mock.calls[2][1].body).request_id).not.toBe(JSON.parse(fetcher.mock.calls[0][1].body).request_id);
 });
 it('blocks concurrent submissions and aborts pending work when unmounted', async () => {

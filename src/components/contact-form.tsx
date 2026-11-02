@@ -42,7 +42,7 @@ export function ContactForm({ endpoint = import.meta.env.VITE_CONTACT_SUBMIT_URL
     <div className="honeypot" aria-hidden="true"><label htmlFor="website">Website</label><input id="website" name="website" tabIndex={-1} autoComplete="off" value={fields.website} onChange={event => setFields({ ...fields, website: event.target.value })} /></div>
     {errors.website && <p role="alert" className="field-error">{errors.website}</p>}
     {submission.kind === 'failed' && <div role="alert" className="submission-error"><p>{submission.error}</p><p className="reference">Reference: {submission.inquiry.request_id}</p><p>Your original details are kept for this retry. Retry here if receipt is uncertain; reloading starts a new form.</p></div>}
-    <Button className="w-full" type="submit" disabled={submission.kind === 'sending'}>{submission.kind === 'sending' ? <><LoaderCircle className="animate-spin" size={18} aria-hidden="true" /> Sending inquiry…</> : submission.kind === 'failed' ? 'Retry inquiry' : <>Contact Us <ArrowUpRight size={18} aria-hidden="true" /></>}</Button>
+    <Button className="w-full" type="submit" disabled={submission.kind === 'sending'}>{submission.kind === 'sending' ? <><LoaderCircle className="animate-spin" size={18} aria-hidden="true" /> Sending inquiry…</> : submission.kind === 'failed' ? 'Retry inquiry' : <>Request a Callback <ArrowUpRight size={18} aria-hidden="true" /></>}</Button>
     <p className="form-footnote">Demo inquiries only. Please use harmless test details.</p>
   </form>;
 }
