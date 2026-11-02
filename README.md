@@ -4,9 +4,9 @@ Version A frontend for WEB-001: React, TypeScript, Vite, Tailwind CSS, and a loc
 
 ## Current milestone
 
-The supplied partial bolt.diy export was completed locally with Codex assistance. This is a frontend milestone, not a completed SOW or live release A. No generated conversation or deployment evidence is claimed.
+The supplied partial bolt.diy export was completed locally with Codex assistance. Version A is deployed; the developer has verified a browser submission and same-ID deduplication in Supabase. The SOW is not yet complete. See [the delivery record](docs/DELIVERY.md) for release identifiers and outstanding evidence.
 
-Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Backend source now includes a Supabase migration/RLS checks, a public Edge Function, and a portable Windmill Flow definition. Cloud configuration, live storage verification, deployment evidence, and independent operator verification remain outstanding.
+Includes required content, responsive form, validation, honeypot, UUID-based retries, explicit response verification, automated tests, and a GitHub Pages workflow. Backend source includes a Supabase migration/RLS checks, a public Edge Function, and a portable Windmill Flow definition. Version B, remaining live failure/security checks, deployed export and independent operator verification remain outstanding.
 
 ## Connect the backend
 
@@ -52,10 +52,10 @@ Set backend CORS to `https://<owner>.github.io`, without the repository path. Ke
 
 ## Remaining work
 
-- Apply the Supabase migration/RLS, deploy the Edge Function, and configure/deploy the authenticated synchronous Windmill Flow from the included source.
-- Real browser storage verification, invalid-input and anonymous-access tests, outage/recovery and duplicate checks.
+- Capture matching browser, Windmill and database evidence for the confirmed inquiry.
+- Complete live invalid-input, anonymous-access and outage/recovery checks; audit for privileged secret exposure.
 - Genuine version B change and second automated deployment to the same URL.
-- Dated T1–T8 evidence, recording, operator guide, portable exports, costs, rotation/recovery instructions, and 72-hour availability.
+- Complete [T1–T8 evidence](docs/TEST_LOG.md), recording, deployed export, costs and 72-hour availability dates. Validate the [operator guide](docs/OPERATOR_QUICKSTART.md) with a new authorized operator.
 
 Automated tests simulate HTTP responses; they are not proof of live-provider behavior. SQL tests were also run on an isolated local PostgreSQL instance. See VALIDATION.md for current verification status.
 
